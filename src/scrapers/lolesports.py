@@ -17,6 +17,7 @@ LEAGUES = [
 HEADERS = {
         'x-api-key': '0TvQnueqKa5mxJntVWt0w4LpLfEkrV1Ta8rQBb9Z'
     }
+
 def get_window(game_id, start_time=None):
     url = "https://feed.lolesports.com/livestats/v1/window/%s" % game_id
     if (start_time is not None):
@@ -56,9 +57,22 @@ def get_tournaments_for_league(leagues=[]):
     response = requests.request("GET", url, headers=HEADERS)
     return [(t['slug'], t['id']) for league in response.json()['data']['leagues'] for t in league['tournaments']]
 
+def append_first_blood_and_turret():
+    with open('lol-games.csv', newline='') as csvfile:
+        reader = csv.reader(csvfile)
+        next(reader, None)
+        events = [tuple(row) for row in reader]
+    
+    for game in events:
+        window = get_window(game[2])
+        for frame in window['frames']:
+            # check if blue team has first blood
+            # check if red team has first blood
+            # do the same for first turret
+
+
 def scrape():
     # ok
-    
     if os.path.isfile('lol-games.csv'):
         print("cached!")
         with open('lol-games.csv', newline='') as csvfile:
@@ -66,9 +80,8 @@ def scrape():
             next(reader, None)
             events = [tuple(row) for row in reader]
     else:
-    
         print("not cached!")
-        
+
         # Step 0: Connect to the unofficial league of legends api
         # https://vickz84259.github.io/lolesports-api-docs/#tag/events
         
@@ -155,6 +168,7 @@ def scrape():
         print('================================')
         print("Patch: %s" % patch_version)
         print("Tournament: %s" % game[0])
+        print("Date: %s" % starting_time.isoformat())
         print("Blue: %s (%s)" % (blu_teamid, teams[blu_teamid]['name']))
         print("Red:  %s (%s)" % (red_teamid, teams[red_teamid]['name']))
         print('================================')
