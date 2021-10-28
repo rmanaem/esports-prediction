@@ -130,8 +130,8 @@ def scrape():
         blu_champions = [c['championId'] for c in blu_team['participantMetadata']]
         red_champions = [c['championId'] for c in red_team['participantMetadata']]
         
-        blu_creep = [(p['creepScore'], p['totalGold'], p['level']) for p in frame['blueTeam']['participants']]
-        red_creep = [(p['creepScore'], p['totalGold'], p['level']) for p in frame['redTeam']['participants']]
+        blu_lane_state = [(p['level'], p['creepScore'], p['totalGold']) for p in frame['blueTeam']['participants']]
+        red_lane_state = [(p['level'], p['creepScore'], p['totalGold']) for p in frame['redTeam']['participants']]
 
         blu_kda = [(p['kills'], p['deaths'], p['assists']) for p in frame['blueTeam']['participants']]
         red_kda = [(p['kills'], p['deaths'], p['assists']) for p in frame['redTeam']['participants']]
@@ -153,19 +153,24 @@ def scrape():
             len(frame['redTeam']['dragons']),
         ]
         print('================================')
-        print(patch_version)
+        print("Patch: %s" % patch_version)
+        print("Tournament: %s" % game[0])
         print("Blue: %s (%s)" % (blu_teamid, teams[blu_teamid]['name']))
         print("Red:  %s (%s)" % (red_teamid, teams[red_teamid]['name']))
         print('================================')
+        print("Picks:")
         print(blu_champions)
         print(red_champions)
         print('================================')
+        print("Game Stats (Gold, Inhibs, Towers, Barons, Kills, Dragons):")
         print(blu_state)
         print(red_state)
         print('================================')
-        print(blu_creep)
-        print(red_creep)
+        print("Stats per lane (CS, Gold, Level):")
+        print(blu_lane_state)
+        print(red_lane_state)
         print('================================')
+        print("KDA per lane:")
         print(blu_kda)
         print(red_kda)
     # print(len(game_vods))
