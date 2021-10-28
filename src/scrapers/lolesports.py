@@ -23,6 +23,12 @@ def get_window(game_id, start_time=None):
         url += "?startingTime=%s" % start_time
     response = requests.request("GET", url, headers=HEADERS)
     return response.json()
+
+def get_teams():
+    url = "https://esports-api.lolesports.com/persisted/gw/getTeams?hl=en-US"
+    response = requests.request("GET", url, headers=HEADERS)
+    return response.json()['data']['teams']
+
 def get_games(gameIds):
     url = "https://esports-api.lolesports.com/persisted/gw/getGames?hl=en-US"
     if (len(gameIds) > 0):
@@ -92,36 +98,12 @@ def scrape():
             csv_out.writerow(('tournament', 'match_id', 'game_id', 'start_time'))
             csv_out.writerows(events)
 
+    # Step 2: Collect teams
+    teams = {}
+    for team in get_teams():
+        teams[team['id']] = team
     
-    # Step 3: For each event in a schedule, find the event details and collect all of their games and start times
-    # use /getEventDetails
-    # if os.path.isfile('lol-games-extended.csv'):
-    #     print("Cached (Game VODs)")
-    #     with open('lol-games-extended.csv', newline='') as csvfile:
-    #         reader = csv.reader(csvfile)
-    #         next(reader, None)
-    #         game_vods = [tuple(row) for row in reader]
-    # else:
-    #     print("Not cached (Game VODs)!")
-    #     all_game_ids = [e[2] for e in events]
-    #     chunks = [all_game_ids[i:i+400] for i in range(0, len(all_game_ids), 400)]
-    #     games = []
-    #     for game_ids in chunks:
-    #         print("chunking")
-    #         games.extend(get_games(game_ids))
-
-    #     reverse_offset = {}
-    #     for game in games:
-    #         reverse_offset[game['id']] = next((x['offset'] for x in game['vods'] if 'offset' in x), None)
-        
-    #     game_vods = [(e[0], e[1], e[2], e[3], reverse_offset[e[2]]) for e in events if e[2] in reverse_offset]
-
-    #     with open('lol-games-extended.csv', 'w', newline='') as out:
-    #         csv_out=csv.writer(out)
-    #         csv_out.writerow(('tournament', 'match_id', 'game_id', 'start_time', 'offset'))
-    #         csv_out.writerows(game_vods)
-    
-    # Step 4: For each game, collect the live game details, and collect all relevant information on team and players
+    # Step 3: For each game, collect the live game details, and collect all relevant information on team and players
     #         At a given point of the game time
     # use /window for this
     # To get results, you must use the gameStartTime and the offset in order to add them up and find the time at which point there is information
@@ -136,16 +118,16 @@ def scrape():
         window = get_window(game[2], "%sZ" % starting_time.isoformat())
         # print(game[2], "%sZ" % starting_time.isoformat())
         game_metadata = window['gameMetadata']
-        blue_team = window['gameMetadata']['blueTeamMetadata']
+        blu_team = window['gameMetadata']['blueTeamMetadata']
         red_team = window['gameMetadata']['redTeamMetadata']
         frame = window['frames'][0]
 
-
-        # break
         # Data Extracted
         patch_version = game_metadata['patchVersion']
+        blu_teamid = blu_team['esportsTeamId']
+        red_teamid = red_team['esportsTeamId']
         # 1,6 - top; 2,7 - jungle; 3,8 - mid; 4,9 - bottom; 5,10 - support
-        blu_champions = [c['championId'] for c in blue_team['participantMetadata']]
+        blu_champions = [c['championId'] for c in blu_team['participantMetadata']]
         red_champions = [c['championId'] for c in red_team['participantMetadata']]
         
         blu_creep = [(p['creepScore'], p['totalGold'], p['level']) for p in frame['blueTeam']['participants']]
@@ -172,6 +154,8 @@ def scrape():
         ]
         print('================================')
         print(patch_version)
+        print("Blue: %s (%s)" % (blu_teamid, teams[blu_teamid]['name']))
+        print("Red:  %s (%s)" % (red_teamid, teams[red_teamid]['name']))
         print('================================')
         print(blu_champions)
         print(red_champions)
