@@ -29,6 +29,9 @@ CSV_MATCH_FIELD_NAMES = [
 ]
 
 def main():
+    # NOTE: We may use this to get the information we need: 
+    # https://lol.fandom.com/wiki/Help:Leaguepedia_API
+    
     match_list = []
 
     for page in [1,2,3,4]:
