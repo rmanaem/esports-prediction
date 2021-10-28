@@ -3,6 +3,7 @@ import requests
 import csv
 import os
 import time
+from datetime import datetime, timedelta
 
 LEAGUES = [
     'worlds',
@@ -125,11 +126,21 @@ def scrape():
     # use /window for this
     # To get results, you must use the gameStartTime and the offset in order to add them up and find the time at which point there is information
     for game in events:
+        print(game)
+        # break
         window = get_window(game[2])
+
+        # get the time
+        timestamp = datetime.fromisoformat(window['frames'][0]['rfc460Timestamp'][:-5])
+        starting_time = timestamp - timedelta(seconds=timestamp.second % 10) + timedelta(minutes=15)
+        window = get_window(game[2], "%sZ" % starting_time.isoformat())
+        # print(game[2], "%sZ" % starting_time.isoformat())
         game_metadata = window['gameMetadata']
         blue_team = window['gameMetadata']['blueTeamMetadata']
         red_team = window['gameMetadata']['redTeamMetadata']
-        frame = window['frames'][0];
+        frame = window['frames'][0]
+
+
         # break
         # Data Extracted
         patch_version = game_metadata['patchVersion']
@@ -137,8 +148,8 @@ def scrape():
         blu_champions = [c['championId'] for c in blue_team['participantMetadata']]
         red_champions = [c['championId'] for c in red_team['participantMetadata']]
         
-        blu_creep = [p['creepScore'] for p in frame['blueTeam']['participants']]
-        red_creep = [p['creepScore'] for p in frame['redTeam']['participants']]
+        blu_creep = [(p['creepScore'], p['totalGold'], p['level']) for p in frame['blueTeam']['participants']]
+        red_creep = [(p['creepScore'], p['totalGold'], p['level']) for p in frame['redTeam']['participants']]
 
         blu_kda = [(p['kills'], p['deaths'], p['assists']) for p in frame['blueTeam']['participants']]
         red_kda = [(p['kills'], p['deaths'], p['assists']) for p in frame['redTeam']['participants']]
@@ -166,7 +177,6 @@ def scrape():
         print(red_champions)
         print('================================')
         print(blu_state)
-        print('================================')
         print(red_state)
         print('================================')
         print(blu_creep)
