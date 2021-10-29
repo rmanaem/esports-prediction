@@ -1,6 +1,16 @@
 from bs4 import BeautifulSoup
 import csv
+import mwclient
+from datetime import timedelta, datetime
 
+TEAM_NAME_MAPPINGS = {
+    'Schalke 04 Evolution': 'FC Schalke 04 Evolution',
+    'SuppUp eSports': 'SAIM SE SuppUp',
+    'K1CK Neosurf': 'K1CK',
+    'AGO Rogue': 'AGO ROGUE',
+    'Cream Real Betis': 'Cream Real Betis.EU',
+    'Mousesports': 'mousesports'
+}
 CSV_MATCH_FIELD_NAMES = [
     'date',
     'patch',
@@ -27,6 +37,36 @@ CSV_MATCH_FIELD_NAMES = [
     'red_barons',
     'red_rift_heralds'
 ]
+
+def get_game(team_a, team_b, game_number, datetime_utc):
+    site = mwclient.Site('lol.fandom.com', path='/')
+
+    team_a_query = TEAM_NAME_MAPPINGS[team_a] if team_a in TEAM_NAME_MAPPINGS else team_a
+    team_b_query = TEAM_NAME_MAPPINGS[team_b] if team_b in TEAM_NAME_MAPPINGS else team_b
+    
+    # Go back 45 minutes to catch earlier responses
+    start = (datetime_utc - timedelta(minutes=59)).isoformat(' ')
+    # Go ahead 45 minutes to prevent catching later ones
+    end = (datetime_utc + timedelta(minutes=30)).isoformat(' ')
+    response = site.api('cargoquery',
+        limit = 'max',
+        tables = "ScoreboardGames=SG",
+        fields = "SG.Tournament, SG.DateTime_UTC, SG.Team1, SG.Team2, SG.WinTeam, SG.N_GameInMatch",
+        where = "((Team1='%s' AND Team2='%s') OR (Team1='%s' AND Team2='%s'))" % (team_a_query, team_b_query, team_b_query, team_a_query) + " AND N_GameInMatch = %s" % (str)(game_number) + " AND (DateTime_UTC between '%s' and '%s')" % (start, end)
+    )
+    
+    def get_winner(win_team):
+        winner = ''
+        if win_team == team_a_query:
+            winner = team_a
+        elif win_team == team_b_query:
+            winner = team_b
+        return winner
+    return [(get_winner(q['title']['WinTeam']), q['title']['N GameInMatch'], q['title']['DateTime UTC']) for q in response['cargoquery']]
+
+    # print(response)
+    # breakpoint()
+    # ((Team1="Cloud9" AND Team2="Gen.G") OR (Team1="Gen.G" AND Team2="Cloud9")) AND (DateTime_UTC >= ;"2021-10-25")
 
 def main():
     # NOTE: We may use this to get the information we need: 
@@ -75,4 +115,4 @@ def main():
     print(len(match_list))
     
 if __name__ == "__main__":
-    main();
+    print(get_game('AGO ROGUE','SuppUp eSports',1,datetime.fromisoformat('2021-04-14 18:18:10')))
