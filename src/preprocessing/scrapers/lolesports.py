@@ -170,15 +170,14 @@ def scrape():
         
         window = get_window(game_id, "%sZ" % (starting_time + timedelta(minutes=minute_mark)).isoformat())
         game_metadata = window['gameMetadata']
-        blu_team = window['gameMetadata']['blueTeamMetadata']
-        red_team = window['gameMetadata']['redTeamMetadata']
-        blu_teamid = blu_team['esportsTeamId']
-        red_teamid = red_team['esportsTeamId']
+        blu_teamid = window['gameMetadata']['blueTeamMetadata']['esportsTeamId']
+        red_teamid = window['gameMetadata']['redTeamMetadata']['esportsTeamId']
+        
 
         # Get the winner        
         winner = leaguepedia.get_game_winner(
-            teams[blu_teamid]['code'],
-            teams[red_teamid]['code'],
+            teams[blu_teamid],
+            teams[red_teamid],
             game_number,
             timestamp
         )
