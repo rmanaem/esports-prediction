@@ -37,14 +37,17 @@ TEAM_NAME_MAPPINGS = {
     'BRO Challengers': 'Fredit BRION Challengers',
     'Vorax Liberty': 'Vorax',
     'Netshoes Miners': 'Cruzeiro eSports',
-
+    'Papara SuperMassive Blaze Akademi': 'SuperMassive Academy',
+    'NASR ESPORTS Akademi': 'NASR eSports Turkey Academy',
+    'Dark Passage Akademi': 'Dark Passage Academy',
+    'fastPay Wildcats Akademi': 'Istanbul Wildcats Academy'
 }
 
 def get_game_winner(team_a, team_b, game_number, datetime_utc):
     
 
-    # Go back 75 minutes to catch earlier responses
-    start = (datetime_utc - timedelta(minutes=85)).isoformat(' ')
+    # Go back 90 minutes to catch earlier responses
+    start = (datetime_utc - timedelta(minutes=90)).isoformat(' ')
     # Go ahead 30 minutes to prevent catching later ones
     end = (datetime_utc + timedelta(minutes=45)).isoformat(' ')
 
