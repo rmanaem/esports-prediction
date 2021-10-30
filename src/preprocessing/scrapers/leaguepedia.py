@@ -26,8 +26,18 @@ TEAM_NAME_MAPPINGS = {
     'EXCEL': 'Excel Esports',
     'Unicorns of Love': 'Unicorns Of Love.CIS',
     '1907 Fenerbahçe Espor Akademi': '1907 Fenerbahçe Academy',
-    'NASR eSports Turkey Academy': 'NASR eSports Turkey Academy'
-    'Rogue': 'Rogue (European Team)'  
+    'NASR eSports Turkey Academy': 'NASR eSports Turkey Academy',
+    'Rogue': 'Rogue (European Team)',
+    'kt Challengers': 'KT Rolster Challengers',
+    'HLE Challengers': 'Hanwha Life Esports Challengers',
+    'GEN Challengers': 'Gen.G Challengers',
+    'NS Challengers': 'Nongshim RedForce Challengers',
+    'LSB Challengers': 'Liiv SANDBOX Challengers',
+    'AF Challengers': 'Afreeca Freecs Challengers',
+    'BRO Challengers': 'Fredit BRION Challengers',
+    'Vorax Liberty': 'Vorax',
+    'Netshoes Miners': 'Cruzeiro eSports',
+
 }
 
 def get_game_winner(team_a, team_b, game_number, datetime_utc):

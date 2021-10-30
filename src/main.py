@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup
-from scrapers import lolesports
+from preprocessing.scrapers import lolesports
 
 def main():
     lolesports.scrape()
