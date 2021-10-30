@@ -8,8 +8,13 @@ from datetime import datetime, timedelta
 from scrapers import leaguepedia
 from scrapers.lolesports import get_tournaments_for_league, get_window, get_teams, get_completed_events
 
-def scrape():
-    # ok
+# Extracts game data from the lolesports.com API 
+def main():
+    # Used later to define the snapshot analyzed
+    minute_mark = 15
+
+    # Check if the csv file already exists
+    # TODO: save on a cached CSV too (cache/lolesports-games.csv)
     if os.path.isfile('lol-games-2020.csv'):
         print("cached!")
         with open('lol-games-2020.csv', newline='') as csvfile:
@@ -49,6 +54,8 @@ def scrape():
             csv_out.writerows(events)
 
     # Step 2: Collect teams
+    # TODO: save on a cached CSV too (cache/lolesports-teams.csv)
+    # TODO: This does not need to be here. Send to step 2 for finding winners
     teams = {}
     for team in get_teams():
         teams[team['id']] = team
@@ -86,37 +93,43 @@ def scrape():
     ]
     out = open('lol-results-2020.csv','w', newline='')
     csv_out=csv.writer(out)
-    csv_out.writerow(headers)
-    minute_mark = 15
+    csv_out.writerow(headers)    
 
     for tournament, match_id, game_id, starting_time, game_number in events:
         i += 1
 
+        # Call it the first time to get the raw starting time. We use this in order to figure out
+        # What minute mark to use next
         window = get_window(game_id)
         if window is None:
-            # Do not go further, because game most likely does not exist
+            # If no window is found, do not go further; this
+            # often happens whenever the game does not 
+            # exist or never actually happened
             continue
-        # get the time
+    
         stripped_datetime = window['frames'][0]['rfc460Timestamp'][:-1].split('.')[0]
         timestamp = datetime.fromisoformat(stripped_datetime)
         starting_time = timestamp - timedelta(seconds=timestamp.second % 10)
-        
+
+        # At this step, we get the actual snapshot based
+        # on the `minute_mark` parameter provided by
+        # the user.
+        #     
         window = get_window(game_id, "%sZ" % (starting_time + timedelta(minutes=minute_mark)).isoformat())
         game_metadata = window['gameMetadata']
         blu_teamid = window['gameMetadata']['blueTeamMetadata']['esportsTeamId']
         red_teamid = window['gameMetadata']['redTeamMetadata']['esportsTeamId']
+        frame = window['frames'][0]
         
 
-        # Get the winner        
+        # Get the winner from Leaguepedia Data       
+        # FIXME: Send this to the second step
         winner = leaguepedia.get_game_winner(
             teams[blu_teamid],
             teams[red_teamid],
             game_number,
             timestamp
         )
-        
-        
-        frame = window['frames'][0]
 
         # Data Extracted
         row = []
@@ -149,7 +162,8 @@ def scrape():
             len(frame['redTeam']['dragons']),
             sum([p['creepScore'] for p in frame['redTeam']['participants']])
         ])
-        # Might be fun to know what champions were used
+
+        # TODO: Might be fun to know what champions were used in the game
         # blu_champions = [c['championId'] for c in blu_team['participantMetadata']]
         # red_champions = [c['championId'] for c in red_team['participantMetadata']]
 
@@ -161,4 +175,6 @@ def scrape():
         if i % 100 == 0:
             print((str)(i) + '/' + (str)(len(events)))
             time.sleep(5)
-            
+
+if __name__ == "__main__":
+    main();
