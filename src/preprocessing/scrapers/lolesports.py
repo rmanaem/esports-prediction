@@ -62,7 +62,7 @@ def get_tournaments_for_league(leagues=[]):
     return [(t['slug'], t['id']) for league in response.json()['data']['leagues'] for t in league['tournaments']]
 
 def append_first_blood_and_turret():
-    with open('lol-games.csv', newline='') as csvfile:
+    with open('lol-results.csv', newline='') as csvfile:
         reader = csv.reader(csvfile)
         next(reader, None)
         events = [tuple(row) for row in reader]
@@ -127,10 +127,12 @@ def scrape():
     i = 0
         
     headers = [
+        'tournament_slug',
         'game_id',
         'match_id', 
         'patch', 
-        'starting_time', 
+        'starting_time',
+        'game_number',
         'blue_team',
         'red_team',
         'winner',
@@ -156,11 +158,7 @@ def scrape():
 
     for tournament, match_id, game_id, starting_time, game_number in events:
         i += 1
-        print((str)(i) + '/' + (str)(len(events)))
 
-        if i % 50 == 0:
-            time.sleep(5)
-            
         window = get_window(game_id)
         if window is None:
             # Do not go further, because game most likely does not exist
@@ -178,24 +176,26 @@ def scrape():
         red_teamid = red_team['esportsTeamId']
 
         # Get the winner        
-        leaguepedia_response = leaguepedia.get_game(
-            teams[blu_teamid]['name'],
-            teams[red_teamid]['name'],
+        winner = leaguepedia.get_game_winner(
+            teams[blu_teamid]['code'],
+            teams[red_teamid]['code'],
             game_number,
             timestamp
         )
-        winner = leaguepedia_response[0][0] if len(leaguepedia_response) > 0 else ''
+        
         
         frame = window['frames'][0]
 
         # Data Extracted
         row = []
+        row.append(tournament)
         row.append(window['esportsGameId'])
         row.append(window['esportsMatchId'])
         row.append(".".join(game_metadata['patchVersion'].split('.')[:2]))
         row.append(starting_time.isoformat(' '))
-        row.append(teams[blu_teamid]['name'])
-        row.append(teams[red_teamid]['name'])
+        row.append(game_number)
+        row.append(teams[blu_teamid]['code'])
+        row.append(teams[red_teamid]['code'])
         row.append(winner)
 
         #  Team Stats
@@ -225,6 +225,11 @@ def scrape():
         # display_lane_stats(frame)
         # print(row)
         csv_out.writerow(row)
+
+        if i % 100 == 0:
+            print((str)(i) + '/' + (str)(len(events)))
+            time.sleep(5)
+            
 
 
 def display_lane_stats():
