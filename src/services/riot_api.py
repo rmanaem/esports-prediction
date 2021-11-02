@@ -30,13 +30,22 @@ def check_limits(headers):
             if remaining <= 1:
                 print('limit reached, sleeping for %s seconds' % time)
                 sleep((int)(time))
-    # if 'X-Method-Rate-Limit' in headers:
-        # print(headers['X-Method-Rate-Limit'])
-        # print(headers['X-Method-Rate-Limit-Count'])
+    if 'X-Method-Rate-Limit' in headers:
+        print(headers['X-Method-Rate-Limit'])
+        print(headers['X-Method-Rate-Limit-Count'])
     
 def fetch(url, prefix=SERVER):
     response = requests.request("GET", (BASE_URL % prefix) + url, headers=HEADERS)
-    check_limits(response.headers)
+
+    # If we reach a rate-limit, use the Retry-After header with
+    # some padded time before requesting the same resource again
+    if response.status_code == requests.codes.too_many_requests:
+        wait = (int)(response.headers['Retry-After']) + 5
+        print("Too many requests detected. Sleeping for %i seconds")
+        sleep(wait + 5)
+        # Retry the request
+        response = requests.request("GET", (BASE_URL % prefix) + url, headers=HEADERS)
+
     return response.json()
 
 def get_players_for_elo(tier, division=None, page=1):
