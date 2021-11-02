@@ -20,13 +20,15 @@ def check_limits(headers):
     if 'X-App-Rate-Limit' in headers:
         limits = headers['X-App-Rate-Limit'].split(',')
         counts = headers['X-App-Rate-Limit-Count'].split(',')
+        
         for i in range(len(limits)):
             limit, time = limits[i].split(':')
             count = (int)(counts[i].split(':')[0])
-            
-            if (int)(limit) - count < 3:
-                print('limit reached, sleeping for %i seconds') % time
-                sleep(time)
+            remaining = (int)(limit) - count
+            print("%i left for %s seconds" % (remaining, time))    
+            if remaining <= 3:
+                print('limit reached, sleeping for %s seconds') % time
+                sleep((int)(time))
     # if 'X-Method-Rate-Limit' in headers:
         # print(headers['X-Method-Rate-Limit'])
         # print(headers['X-Method-Rate-Limit-Count'])
@@ -37,7 +39,11 @@ def fetch(url, prefix=SERVER):
     return response.json()
 
 def get_players_for_elo(tier, division=None, page=1):
-    url = "/lol/league/v4/entries/RANKED_SOLO_5x5/%s/%s?page=%s" % (tier, division, page)
+    if tier == 'GRANDMASTERS':
+        url = "/lol/league/v4/grandmasterleagues/by-queue/RANKED_SOLO_5x5"
+        return fetch(url)['entries']
+    else:
+        url = "/lol/league/v4/entries/RANKED_SOLO_5x5/%s/%s?page=%s" % (tier, division, page)
     return fetch(url)
 
 def get_summoner_by_id(summonerId):
