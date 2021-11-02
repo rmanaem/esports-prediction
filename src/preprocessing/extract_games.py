@@ -8,16 +8,14 @@ from datetime import datetime, timedelta
 from scrapers import leaguepedia
 from scrapers.lolesports import get_tournaments_for_league, get_window, get_teams, get_completed_events
 
+LOL_GAMES_CACHE = '__cache__/lol-games-cache.csv'
 # Extracts game data from the lolesports.com API 
-def main():
-    # Used later to define the snapshot analyzed
-    minute_mark = 15
-
+# Minute mark: used later to define the snapshot analyzed
+def extract(minute_mark=15, output_file='', tournament_year='2021'):
     # Check if the csv file already exists
     # TODO: save on a cached CSV too (cache/lolesports-games.csv)
-    if os.path.isfile('lol-games-2020.csv'):
-        print("cached!")
-        with open('lol-games-2020.csv', newline='') as csvfile:
+    if os.path.isfile(LOL_GAMES_CACHE):
+        with open(LOL_GAMES_CACHE, newline='') as csvfile:
             reader = csv.reader(csvfile)
             next(reader, None)
             events = [tuple(row) for row in reader]
@@ -28,19 +26,19 @@ def main():
         # https://vickz84259.github.io/lolesports-api-docs/#tag/events
         
         # Step 1: Get all tournaments for every league, get the tournaments to analyze. 
-        # use /getTournamentsForLeague
-        all_tournaments = get_tournaments_for_league()
-        
-        # Filter the leagues, stick to data from Jan 01, 2021 and later
-        tournaments_2021 = [t for t in filter(lambda x: '2020' in x[0], all_tournaments)]
+        #         Then, filter the leagues, stick to data from Jan 01, 2021 and later
+        # API: use /getTournamentsForLeague        
+        # 
+        # TODO: Specify the year the user wants (or list of years)
+        tournaments = [t for t in filter(lambda x: tournament_year in x[0], get_tournaments_for_league())]
 
         # For each tournaments, get all the games related to it, along with their start time
         i = 0
         events = []
 
-        for slug, tournamentId in tournaments_2021:
+        for slug, tournamentId in tournaments:
             i += 1
-            print((str)(i) + '/' + (str)(len(tournaments_2021)))
+            print((str)(i) + '/' + (str)(len(tournaments)))
             events.extend([(slug, e['match']['id'], g['id'], e['startTime'], (e['games'].index(g) + 1)) for e in get_completed_events([tournamentId]) for g in e['games']])
             
             if i % 15 == 0:
@@ -48,7 +46,7 @@ def main():
             # break
 
         # save to a file, to avoid going back to the api and scrape it all again
-        with open('lol-games-2020.csv','w', newline='') as out:
+        with open(LOL_GAMES_CACHE,'w', newline='') as out:
             csv_out=csv.writer(out)
             csv_out.writerow(('tournament', 'match_id', 'game_id', 'start_time', 'game_number'))
             csv_out.writerows(events)
