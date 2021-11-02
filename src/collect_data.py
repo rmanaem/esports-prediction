@@ -6,7 +6,7 @@ TIERS = {
     'BRONZE': (DIVISIONS,1250),
     'GOLD': (DIVISIONS,1250),
     'DIAMOND': (DIVISIONS,1250),
-    'GRANDMASTERS': (None,5000)
+    'GRANDMASTERS': (['GR'],5000)
 }
 
 def main():

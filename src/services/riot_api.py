@@ -25,9 +25,10 @@ def check_limits(headers):
             limit, time = limits[i].split(':')
             count = (int)(counts[i].split(':')[0])
             remaining = (int)(limit) - count
-            print("%i left for %s seconds" % (remaining, time))    
-            if remaining <= 3:
-                print('limit reached, sleeping for %s seconds') % time
+            if (remaining < 10):
+                print("%i left for %s seconds" % (remaining, time))    
+            if remaining <= 1:
+                print('limit reached, sleeping for %s seconds' % time)
                 sleep((int)(time))
     # if 'X-Method-Rate-Limit' in headers:
         # print(headers['X-Method-Rate-Limit'])
