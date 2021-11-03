@@ -58,9 +58,11 @@ def main():
         for entry in it:
             if entry.is_file() and entry.name.endswith('.csv'):
                 with open(entry.path, 'r', newline='') as f:
+                    print(entry.path)
                     reader = csv.reader(f)
                     next(reader, None)
                     csv_matches.extend([tuple(row) for row in reader])
+                    print(len(csv_matches))
     
     # Now open two files:
     # - The first, lol-data-matches.csv, holds every info of the match itself
@@ -78,6 +80,7 @@ def main():
         os.path.dirname(__file__), 
         '../output/csv/lol-data-error-%s.csv' % version
     )
+    
     with open(matches_filepath, 'w', newline='') as (out1
         ), open(match_frames_filepath, 'w', newline='') as (out2
         ), open(error_filepath, 'w', newline='') as out3:
@@ -90,7 +93,7 @@ def main():
 
         # Step 2
         i = 1
-        for csv_match in csv_matches[1663:]:
+        for csv_match in csv_matches:
             try:
                 # if i % 100 == 0:
                 print("%i/%i" % (i, len(csv_matches)))
