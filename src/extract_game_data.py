@@ -5,6 +5,7 @@ from services import riot_api
 from parsers.match_parser import parse_match
 from parsers.timeline_parser import parse_frame
 import time
+from datetime import datetime
 
 TEAM_ID_BLUE = 100
 TEAM_ID_RED = 200
@@ -60,42 +61,54 @@ def main():
     # Now open two files:
     # - The first, lol-data-matches.csv, holds every info of the match itself
     # - The second, lol-data-timeseries.csv, holds every snapshot of the match its related to
-    version = (int)(time.time()) 
+    version = datetime.now().strftime('%Y-%m-%d-%H-%M-%S') 
     matches_filepath = os.path.join(
         os.path.dirname(__file__),
-        '../output/csv/lol-data-matches-%i.csv' % version
+        '../output/csv/lol-data-matches-%s.csv' % version
     )
     match_frames_filepath = os.path.join(
         os.path.dirname(__file__), 
-        '../output/csv/lol-data-match-frames-%i.csv' % version
+        '../output/csv/lol-data-match-frames-%s.csv' % version
+    )
+    error_filepath = os.path.join(
+        os.path.dirname(__file__), 
+        '../output/csv/lol-data-error-%s.csv' % version
     )
     with open(matches_filepath, 'w', newline='') as (out1
-        ),  open(match_frames_filepath, 'w', newline='') as out2:
+        ), open(match_frames_filepath, 'w', newline='') as (out2
+        ), open(error_filepath, 'w', newline='') as out3:
         csv_match_out = csv.writer(out1)
         csv_match_out.writerow(MATCH_DATA_HEADERS)
         csv_frame_out = csv.writer(out2)
         csv_frame_out.writerow(FRAME_DATA_HEADERS)
+        error_out = csv.writer(out3)
+        error_out.writerow(['error'])
 
         # Step 2
         i = 1
-        for csv_match in csv_matches[1059:]:
-            print("%i/%i" % (i, len(csv_matches)))
-            match = riot_api.get_match_by_matchid(csv_match[2])
-            # Sometimes, the value of the match is empty. 
-            # When this happens, skip the value.
-            if match['info']['gameMode'] == '':
-                print("oups")
-                breakpoint()
-                continue
-            breakpoint()
-            match_row = parse_match(match)
-            csv_match_out.writerow(match_row)
+        for csv_match in csv_matches[1663:]:
+            try:
+                # if i % 100 == 0:
+                print("%i/%i" % (i, len(csv_matches)))
+                match = riot_api.get_match_by_matchid(csv_match[2])
+                timeline = riot_api.get_match_timeline_by_matchid(csv_match[2])
 
-            timeline = riot_api.get_match_timeline_by_matchid(csv_match[2])
-            for frame_num in range(len(timeline['info']['frames'])):
-                frame_row = parse_frame(csv_match[2], timeline['info']['frames'], frame_num)
-                csv_frame_out.writerow(frame_row)
-            i += 1
-    
+                # Sometimes, the value of the match is empty. 
+                # When this happens, skip the value.
+                if match['info']['gameMode'] == '' or 'info' not in timeline:
+                    i += 1   
+                    continue
+                match_row = parse_match(match)
+                csv_match_out.writerow(match_row)
+
+                for frame_num in range(len(timeline['info']['frames'])):
+                    frame_row = parse_frame(csv_match[2], timeline['info']['frames'], frame_num)
+                    csv_frame_out.writerow(frame_row)
+                i += 1
+            except Exception as e:
+                error_out.writerow([csv_match[2]])
+                i += 1
+                continue
+
 if __name__ == "__main__":
     main()
