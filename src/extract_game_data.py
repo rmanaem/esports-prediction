@@ -78,9 +78,16 @@ def main():
 
         # Step 2
         i = 1
-        for csv_match in csv_matches:
+        for csv_match in csv_matches[1059:]:
             print("%i/%i" % (i, len(csv_matches)))
             match = riot_api.get_match_by_matchid(csv_match[2])
+            # Sometimes, the value of the match is empty. 
+            # When this happens, skip the value.
+            if match['info']['gameMode'] == '':
+                print("oups")
+                breakpoint()
+                continue
+            breakpoint()
             match_row = parse_match(match)
             csv_match_out.writerow(match_row)
 
