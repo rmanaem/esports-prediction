@@ -11,6 +11,8 @@ TEAM_ID_BLUE = 100
 TEAM_ID_RED = 200
 
 MATCH_DATA_HEADERS = [
+    'tier',
+    'division'
     'match_id',
     'patch',
     'game_duration',
@@ -80,7 +82,26 @@ def main():
         os.path.dirname(__file__), 
         '../output/csv/lol-data-error-%s.csv' % version
     )
-    
+
+    cache_matches_filepath = os.path.join(os.path.dirname(__file__), '../output/csv/lol-data-matches.csv')
+    cache_match_frames_filepath = os.path.join(os.path.dirname(__file__), '../output/csv/lol-data-match-frames.csv')
+
+    # Then get the existing matches already built
+    cache_matches = {}
+    cache_match_frames = {}
+    with open(cache_matches_filepath, 'r', newline='') as f1, open(cache_match_frames_filepath, 'r', newline='') as f2:
+        reader = csv.reader(f1)
+        for row in reader:
+            t = tuple(row)
+            cache_matches[t[0]] = t
+        
+        reader = csv.reader(f2)
+        for row in reader:
+            t = tuple(row)
+            if t[0] in cache_match_frames:
+                cache_match_frames[t[0]].append(t)
+            else:
+                cache_match_frames[t[0]] = [t]
     with open(matches_filepath, 'w', newline='') as (out1
         ), open(match_frames_filepath, 'w', newline='') as (out2
         ), open(error_filepath, 'w', newline='') as out3:
@@ -94,28 +115,36 @@ def main():
         # Step 2
         i = 1
         for csv_match in csv_matches:
-            try:
-                # if i % 100 == 0:
-                print("%i/%i" % (i, len(csv_matches)))
-                match = riot_api.get_match_by_matchid(csv_match[2])
-                timeline = riot_api.get_match_timeline_by_matchid(csv_match[2])
+            print("%i/%i" % (i, len(csv_matches)))
 
-                # Sometimes, the value of the match is empty. 
-                # When this happens, skip the value.
-                if match['info']['gameMode'] == '' or 'info' not in timeline:
-                    i += 1   
-                    continue
-                match_row = parse_match(match)
+            if csv_match[2] in cache_matches and csv_match[2] in cache_match_frames:
+                match_row = csv_match[:2] + cache_matches[csv_match[2]]
+                frame_rows = cache_match_frames[csv_match[2]]
                 csv_match_out.writerow(match_row)
+                csv_frame_out.writerows(frame_rows)
+            else:
+                try:
+                    # if i % 100 == 0:    
+                    match = riot_api.get_match_by_matchid(csv_match[2])
+                    timeline = riot_api.get_match_timeline_by_matchid(csv_match[2])
 
-                for frame_num in range(len(timeline['info']['frames'])):
-                    frame_row = parse_frame(csv_match[2], timeline['info']['frames'], frame_num)
-                    csv_frame_out.writerow(frame_row)
-                i += 1
-            except Exception as e:
-                error_out.writerow([csv_match[2]])
-                i += 1
-                continue
+                    # Sometimes, the value of the match is empty. 
+                    # When this happens, skip the value.
+                    if match['info']['gameMode'] == '' or 'info' not in timeline:
+                        i += 1   
+                        continue
+                    match_row = parse_match(match)
+                    csv_match_out.writerow(csv_match[:2] + match_row)
+
+                    for frame_num in range(len(timeline['info']['frames'])):
+                        frame_row = parse_frame(csv_match[2], timeline['info']['frames'], frame_num)
+                        csv_frame_out.writerow(frame_row)
+                except Exception as e:
+                    error_out.writerow([csv_match[2]])
+                    continue
+            # next
+            i += 1
+
 
 if __name__ == "__main__":
     main()
