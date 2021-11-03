@@ -12,14 +12,14 @@ TEAM_ID_RED = 200
 
 MATCH_DATA_HEADERS = [
     'tier',
-    'division'
+    'division',
     'match_id',
     'patch',
     'game_duration',
     'region',
     'winning_team',
     'first_champion',
-    'first_tower'
+    'first_tower',
     'first_inhibitor',
     'first_baron',
     'first_dragon',
