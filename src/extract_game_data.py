@@ -53,10 +53,14 @@ FRAME_DATA_HEADERS = [
 def main():    
     # Scan for every csv in the `data/csv` folder
     # NOTE: for now, just open one to test
-    with open(os.path.join(os.path.dirname(__file__), '../data/csv/lol-matches-GRANDMASTERS-GR.csv'), 'r', newline='') as f:
-        reader = csv.reader(f)
-        next(reader, None)
-        csv_matches = [tuple(row) for row in reader]
+    csv_matches = []
+    with os.scandir(os.path.join(os.path.dirname(__file__), '../data/csv')) as it:
+        for entry in it:
+            if entry.is_file() and entry.name.endswith('.csv'):
+                with open(entry.path, 'r', newline='') as f:
+                    reader = csv.reader(f)
+                    next(reader, None)
+                    csv_matches.extend([tuple(row) for row in reader])
     
     # Now open two files:
     # - The first, lol-data-matches.csv, holds every info of the match itself
