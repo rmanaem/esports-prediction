@@ -1,4 +1,4 @@
-,tier,division,match_id,patch,game_duration,region,winning_team,first_champion,first_tower,first_inhibitor,first_baron,first_dragon,first_rift_herald
+count,tier,division,match_id,patch,game_duration,region,winning_team,first_champion,first_tower,first_inhibitor,first_baron,first_dragon,first_rift_herald
 2603,BRONZE,I,EUW1_5479661889,11.19,1797062,EUW1,100.0,100.0,100.0,100.0,100.0,100.0,100.0
 2604,BRONZE,I,EUW1_5479575964,11.19,1719396,EUW1,100.0,100.0,200.0,100.0,,100.0,200.0
 2605,BRONZE,I,EUW1_5479499524,11.19,1352414,EUW1,200.0,200.0,200.0,200.0,,100.0,200.0
