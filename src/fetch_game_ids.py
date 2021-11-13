@@ -1,5 +1,7 @@
 from services import riot_api
 import csv
+import os
+import random
 
 DIVISIONS = ['I','II','III','IV']
 TIERS = {
@@ -18,7 +20,15 @@ def main():
     # First is setting up the api for a specific region
     # TODO: not gonna deal with this for now
     # api = new RiotAPI(REGION)
-
+    csv_matches = []
+    with os.scandir(os.path.join(os.path.dirname(__file__), '../data/csv')) as it:
+        for entry in it:
+            if entry.is_file() and entry.name.endswith('.csv'):
+                with open(entry.path, 'r', newline='') as f:
+                    reader = csv.reader(f)
+                    next(reader, None)
+                    csv_matches.extend([tuple(row)[2] for row in reader])
+    # return
     # Loop through the tiers from which 
     # we want to extract the games
     for tier, (divisions, thres) in list(TIERS.items()):
@@ -27,9 +37,9 @@ def main():
             # STAGE 1: Games collection for the tier
             matchIds = []
             # Pick up the players to look at
-            # TODO Loop the tier and divisions 
             players = riot_api.get_players_for_elo(tier=tier, division=division)
             # Shuffle the players to get a randomized choice of players
+            random.shuffle(players)
 
             # Use this to see whether we reach the desired
             # amount of matches for a particular tier.
@@ -37,9 +47,11 @@ def main():
             for summonerId in [p['summonerId'] for p in players]:
                 # Get the player's PUUID from his summoner record
                 summoner = riot_api.get_summoner_by_id(summonerId)
-                matches = riot_api.get_matches_by_puuid(summoner['puuid'])
-                matchIds.extend([(tier, division, m) for m in matches])
-                carry += len(matches)
+                matches = riot_api.get_matches_by_puuid(summoner['puuid'], count=50)
+                filtered_matches = [(tier, division, m) for m in matches if m not in csv_matches]
+                matchIds.extend(filtered_matches)
+                # breakpoint()
+                carry += len(filtered_matches)
                 print("Completed %i out of %i matches" % (carry, thres)) 
                 if carry >= thres:
                     break
