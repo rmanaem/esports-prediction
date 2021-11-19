@@ -24,7 +24,7 @@ def get_building_kills(building_type, frames):
         building_kills = [e['teamId'] for f in frames for e in f['events'] if e['type'] == building_type]
     else:
         building_kills = [e['teamId'] for f in frames for e in f['events'] if e['type'] == 'BUILDING_KILL' and e['buildingType'] == building_type]
-    return len([k for k in building_kills if k == 100]), len([k for k in building_kills if k == 200])
+    return len([k for k in building_kills if k == 200]), len([k for k in building_kills if k == 100])
 
 def parse_frame(match_id, timeline, frame_number):
     frame = timeline[frame_number]
