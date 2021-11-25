@@ -2,10 +2,10 @@
 
 # Authors
 
-- Benjamin Lofo Follo (#40008156)
-- Arman Jahanpour ()
-- Roshleen Mand (#40085661)
-- Jialin Yang (#40069006)
+- Benjamin Lofo Follo 
+- Arman Jahanpour
+- Roshleen Mand
+- Jialin Yang
 # Introduction
 
 ## Purpose
