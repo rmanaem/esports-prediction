@@ -3,6 +3,8 @@ import csv
 import os
 import random
 
+# You can configure these values in order
+# to determine how much data you want to get
 DIVISIONS = ['I','II','III','IV']
 TIERS = {
     'BRONZE': (DIVISIONS,1250),
