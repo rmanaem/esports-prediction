@@ -26,6 +26,21 @@ def get_building_kills(building_type, frames):
         building_kills = [e['teamId'] for f in frames for e in f['events'] if e['type'] == 'BUILDING_KILL' and e['buildingType'] == building_type]
     return len([k for k in building_kills if k == 200]), len([k for k in building_kills if k == 100])
 
+# Parse frame takes a timeline's frame and creates a tuple
+# containing all the relevant information that we wish to
+# analyze, which includes each team's total gold, kills,
+# cs, damage to champion, elite monster kills and 
+# building kills
+#
+# Carry is used in order to figure the current tally of the particular
+# stat line we are analyzing. Because the Timeline DTO is a collection
+# of event, for a given frame number T and event type E, we accumulate
+# every event E that has occured in Frames inside [0,T] for the sum.
+#
+# The tuple is returned such that in a numpy array, it can be reshaped into 
+# a matric of size 2x10, allowing each corresponding statline to line
+# up for to the counterpart (red_kills right on top of blue_kills,
+# so on so forth...)
 def parse_frame(match_id, timeline, frame_number):
     frame = timeline[frame_number]
     carry = timeline[:frame_number]

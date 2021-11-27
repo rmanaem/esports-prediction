@@ -1,10 +1,18 @@
 
-
+# To find the team, we loop through each team object
+# to find the boolean property win being toggled.
+# If it is a tie, the function returns nothing
 def get_winning_team(teams):
     for t in teams:
         if t['win']:
             return t['teamId']
-    
+
+# Prepares the objective arrays, similar to how
+# `get_winning_team` operates. a first objective
+# represents which team got the first one. For
+# example, if Blue side killed another champion
+# for first blood, objectives['champion'] 
+# would equal to 100, so on so forth.
 def get_objectives(teams):
     objectives = {
         'baron': None,
@@ -25,6 +33,7 @@ def get_objectives(teams):
 def get_patch_version(patch):
     return ".".join(patch.split('.')[:2])
 
+# Accepts a match DTO, and extracts relevant information regarding overall game statistics
 def parse_match(match_dto):
     match_id = match_dto['metadata']['matchId']
     patch = get_patch_version(match_dto['info']['gameVersion'])

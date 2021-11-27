@@ -10,6 +10,7 @@ from datetime import datetime
 TEAM_ID_BLUE = 100
 TEAM_ID_RED = 200
 
+# Information extracted from the Match-V5 Endpoint
 MATCH_DATA_HEADERS = [
     'tier',
     'division',
@@ -24,8 +25,8 @@ MATCH_DATA_HEADERS = [
     'first_baron',
     'first_dragon',
     'first_rift_herald',
-    
 ]
+
 
 FRAME_DATA_HEADERS = [
     'match_id',  
@@ -67,8 +68,9 @@ def main():
                     print(len(csv_matches))
     
     # Now open two files:
-    # - The first, lol-data-matches.csv, holds every info of the match itself
-    # - The second, lol-data-timeseries.csv, holds every snapshot of the match its related to
+    # - The first, lol-data-matches.csv, will hold every info of the match itself
+    # - The second, lol-data-match-frames.csv, will hold every minute snapshot of the match its related to
+    # - The third, lol-data-errors.csv, saves match ids that failed to later reprocess
     version = datetime.now().strftime('%Y-%m-%d-%H-%M-%S') 
     matches_filepath = os.path.join(
         os.path.dirname(__file__),
@@ -83,10 +85,12 @@ def main():
         '../output/csv/lol-data-error-%s.csv' % version
     )
 
+    # The original output file acts as a cache in order to
+    # avoid fetching game ids that were already analyzed
+    # which saves time during the script's execution.
     cache_matches_filepath = os.path.join(os.path.dirname(__file__), '../output/csv/lol-data-matches.csv')
     cache_match_frames_filepath = os.path.join(os.path.dirname(__file__), '../output/csv/lol-data-match-frames.csv')
 
-    # Then get the existing matches already built
     cache_matches = {}
     cache_match_frames = {}
     with open(cache_matches_filepath, 'r', newline='') as f1, open(cache_match_frames_filepath, 'r', newline='') as f2:
@@ -102,6 +106,9 @@ def main():
                 cache_match_frames[t[0]].append(t)
             else:
                 cache_match_frames[t[0]] = [t]
+
+    # This is the start of the importing script. 
+    # We open all three files for processing
     with open(matches_filepath, 'w', newline='') as (out1
         ), open(match_frames_filepath, 'w', newline='') as (out2
         ), open(error_filepath, 'w', newline='') as out3:
@@ -112,19 +119,21 @@ def main():
         error_out = csv.writer(out3)
         error_out.writerow(['error'])
 
-        # Step 2
+        # For displaying purposes, we keep note of the progress using the index
         i = 1
         for csv_match in csv_matches:
             print("%i/%i" % (i, len(csv_matches)))
 
+            # If the csv match is already inside the output, we 
+            # directly add it to the match and frames files
             if csv_match[2] in cache_matches and csv_match[2] in cache_match_frames:
-                match_row = csv_match[:2] + cache_matches[csv_match[2]]
+                match_row = cache_matches[csv_match[2]]
                 frame_rows = cache_match_frames[csv_match[2]]
                 csv_match_out.writerow(match_row)
                 csv_frame_out.writerows(frame_rows)
             else:
                 try:
-                    # if i % 100 == 0:    
+                    # Fetch both match and timeline information from the Riot API   
                     match = riot_api.get_match_by_matchid(csv_match[2])
                     timeline = riot_api.get_match_timeline_by_matchid(csv_match[2])
 
@@ -133,9 +142,12 @@ def main():
                     if match['info']['gameMode'] == '' or 'info' not in timeline:
                         i += 1   
                         continue
+
+                    # Parse the match tuple, and append the division and the tier to its row
                     match_row = parse_match(match)
                     csv_match_out.writerow(csv_match[:2] + match_row)
 
+                    # Then, parse each frame row, appending the result to the match frame file
                     for frame_num in range(len(timeline['info']['frames'])):
                         frame_row = parse_frame(csv_match[2], timeline['info']['frames'], frame_num)
                         csv_frame_out.writerow(frame_row)
