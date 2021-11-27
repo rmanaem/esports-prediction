@@ -43,10 +43,21 @@ A Riot API key is also needed for the API Client to work, which you can get here
 $ python src/fetch_game_ids.py
 ```
 
-2. Extract the game data using the following command (NOTE: this step may take very long (ETA:20 hours)
+2. Extract the game data using the following command **(NOTE: this step may take very long (ETA:20 hours)**
 ```
 $ python src/extract_game_data.py
 ```
 
 3. Run the `processing.ipynb` to pre-process the data prior to analysis
 4. Use the `training.ipynb` file to train the machine learning models
+
+# Thank you
+
+We have used these sources for bringing the project to life:
+
+*AlphaStar: Grandmaster level in StarCraft II using multi-agent reinforcement learning* (For formatting layout of our report)
+https://deepmind.com/blog/article/AlphaStar-Grandmaster-level-in-StarCraft-II-using-multi-agent-reinforcement-learning
+
+*Riot Developer - Collecting data* (Best practices on the Riot API)
+https://riot-api-libraries.readthedocs.io/en/latest/collectingdata.html
+
