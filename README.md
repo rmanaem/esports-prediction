@@ -1,4 +1,4 @@
-# COMP 432
+# Esports Prediction
 
 # Authors
 
