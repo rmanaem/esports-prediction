@@ -12,6 +12,16 @@ League of Legends is a multiplayer online battle arena (MOBA) game where two tea
 
 ---
 
+## Data Overview
+
+### League of Legends
+
+Created in 2009 by Riot Games, League of Legends (LoL) is a team-based strategy game involving two teams aiming to destroy their opponent’s base. Before the start of the game players select one of over 150 unique champions, each with their own play style and abilities, to build a team that fits their desired game plan and strategy.
+
+A match of League of Legends requires several skills to achieve success: a player must be skillful in generating income by increasing their Creep Score (CS), taking down enemy champions and turrets, as well as controlling important map resources such as elemental drakes and Baron Nashor. Predicting a winner from a given match can prove to be difficult, as each of these traits can tip a match’s outcome to a team’s favour and how these milestones are accomplished is just as important as completing them.
+
+---
+
 ## Deliverable Contents
 
 The deliverable collection contains the following documents:
