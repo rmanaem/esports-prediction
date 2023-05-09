@@ -139,6 +139,31 @@ Results posted by the neural network algorithm were not convincing enough to ana
 
 ---
 
+## Conclusion
+
+### Observations
+
+Compared to the dummy application, all models were able to surpass the threshold initially set prior to the study. Of the models trained, the k-nearest neighbours posted the strongest results. Its ability to rely on surrounding data points to assess a game’s victory makes it a proper fit for the game’s characteristics.
+
+A team with a gold advantage and kill advantage increases its chance of winning a game convincingly. While this may seem to be an evident observation, it is worthwhile to highlight that gold advantage ranked higher than kills during feature analysis. With this insight, it follows that a team may find more worth in collecting resources increasing their economy over seeking fights putting their winning chances at risk.
+
+On the other end, resources such as rift and plates give
+an early advantage, but lose value over time; investing in
+them may not be the most optimal choice if they are faced to longer standing ones, like creep score or towers.
+
+The table below shows samples misclassified as blue victories (random forest estimator). Negative values are advantages to the blue team, positive values to the red team. Columns for inhibitor and baron specify the team that obtained the first one, while the remaining four represent the size of difference.
+
+| inhibitor | baron | kills | gold | damage | towers |
+| :---: | :---: | :---: | :---: | :---: | :---: |
+| blue | red | 4 | -2391 | -15982 | -5 |
+| blue | red | 6 | -1637 | -3938 | -1 |
+| blue | blue | 7 | 5682 | 15075 | 3 |
+| blue | red | 5 | 1811 | 13800 | 1 |
+| blue | blue | -15 | -1472 | -12730 | -4 |
+| blue | red | 0 | -5792 | -16715 | -2 |
+
+When verifying the misclassified samples, we can identify the bias the model had in response to the first team holding the inhibitor. This can lead to a loss of precision by the model, which can be observed by the smaller precision scores posted by all models. While first objectives are good indicators to a team’s capacity to win, it may be important to weight them such that it does not affect precision scores negatively, as shown above.
+
 ## Deliverable Contents
 
 The deliverable collection contains the following documents:
