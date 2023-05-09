@@ -74,6 +74,18 @@ In sum, the data holds clear levers that the model can use for coming up with a 
 
 ---
 
+## Learning Algorithms
+
+### Models
+
+The following algorithms have been selected to find a model that best solves the classification problem provided by the training data:
+- **AdaBoost**: Its ability to boost additional configurations of the features provided make it a likely candidate to predict match winners.
+- **Random Forest**: Bagging a number of estimators with varying weights for each of our features can allow to make a well-revised prediction.
+- **k-Nearest Neighbor**: The model can potentially detect similar characteristics from neighbouring games with similar statistical outcomes.
+- **Neural Network**: Can iterate through the training models to identify additional characteristics and patterns in the features.
+- **Logistic Regression**: Simple and effective model to train to solve a binary classification problem.
+- **Support Vector Machine**: Can provide a decision function that separates the data convincingly.
+
 ## Deliverable Contents
 
 The deliverable collection contains the following documents:
