@@ -226,3 +226,13 @@ This repository contains the following:
 - `src/training.ipynb`: Interactive Jupyter Notebook used to train models against the preprocessed data inside the `data` folder.
 
 ---
+
+## Acknowledgements
+
+We have used these sources to bring the project to life:
+
+- [*AlphaStar: Grandmaster level in StarCraft II using multi-agent reinforcement learning* (For formatting layout of our report)](https://deepmind.com/blog/article/AlphaStar-Grandmaster-level-in-StarCraft-II-using-multi-agent-reinforcement-learning)
+
+- [*Riot Developer - Collecting data* (Best practices on the Riot API)](https://riot-api-libraries.readthedocs.io/en/latest/collectingdata.html)
+
+---
