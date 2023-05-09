@@ -18,6 +18,8 @@ League of Legends is a multiplayer online battle arena (MOBA) game where two tea
 
 Created in 2009 by Riot Games, League of Legends (LoL) is a team-based strategy game involving two teams aiming to destroy their opponent’s base. Before the start of the game players select one of over 150 unique champions, each with their own play style and abilities, to build a team that fits their desired game plan and strategy.
 
+<p alt="map" align="center"><a href="https://github.com/rmanaem/esports-prediction/blob/master/figures/map.png"><img src="https://github.com/rmanaem/esports-prediction/blob/master/figures/map.png?raw=true"/></a></p>
+
 A match of League of Legends requires several skills to achieve success: a player must be skillful in generating income by increasing their Creep Score (CS), taking down enemy champions and turrets, as well as controlling important map resources such as elemental drakes and Baron Nashor. Predicting a winner from a given match can prove to be difficult, as each of these traits can tip a match’s outcome to a team’s favour and how these milestones are accomplished is just as important as completing them.
 
 ### Definitions
@@ -38,7 +40,6 @@ Objectives are key milestones teams can achieve during a match. These can vary f
 - Baron Nashor: A team successfully slaying Baron Nashor is rewarded with a buff on all team players active on the map Baron only becomes available after 20 minutes has elapsed in a game, making it a potential advantage to be acquired from the mid to the late stages of the game.
 - Inhibitor: When an inhibitor is destroyed, the opposing team produces stronger minions for a set amount of time, giving them added advantage at the later stages of the game.
 
-<<<<<<< HEAD
 #### Frame and Game Resources
 
 A frame f represents the current state of a match at the given minute mark. The cumulated amounts for each team player’s stat line is compiled under a feature specific to that team. This will include several dimensions such as:
@@ -48,7 +49,7 @@ A frame f represents the current state of a match at the given minute mark. The 
 - Amount of turrets, inhibitors and plates destroyed
 - Amount of Baron Nashors slain
 - Amount of Rift Heralds slain
-=======
+
 ### Feature Analysis
 
 With the number of features at our disposal, it is worthwhile to explore and analyze how they relate to our expected outcome and their importance to our study. From analyzing five objective first features analyzed, the first inhibitor property came out as the strongest indicator to a winner, with 90% of the matches won by the same team that has destroyed the first inhibitor. This is plausible, as inhibitors are broken late into a game’s match and give an advantageous boost to the team towards reaching a decisive win. The figure below illustrates proportion of matches won according to the team that acquired the first inhibitors.
@@ -70,7 +71,6 @@ On the game resources side, A strong correlation was shared between the winning 
 | rift advantage | 0.247 |
 
 In sum, the data holds clear levers that the model can use for coming up with a decision as to solving the classification problem. The choice of the data points at a particular time frame in every game will be a determining factor for achieving adequate results during evaluation. To solve the training set’s dimensionality problem, a correlation threshold was set to remove any features that lie below a ratio of 0.5; this left us with the following features remained after the reduction: first inhibitor, baron, kill, gold, damage, and tower advantage.
->>>>>>> 966dcf8 (Added `Feature Analysis` subsection to the `Data Overview` section)
 
 ---
 
