@@ -6,6 +6,12 @@ League of Legends is a team-based strategy game requiring several skills to achi
 
 ---
 
+## Introduction
+
+League of Legends is a multiplayer online battle arena (MOBA) game where two teams of five players face off to destroy the other’s base [1]. While the computerized sport possesses the luxury of providing instantly measurable data, analysts may find it difficult to predict the outcome of a match, due to the number of parameters that can fluctuate from one game to another, along with multiple factors that may influence the results. Through this study, we aim to attempt at maximizing the likelihood of predicting the victory of one League of Legends team over another and observe how machine learning can solve the problem in providing a good assessment of a team’s strength based on the information it is provided throughout a match.
+
+---
+
 ## Deliverable Contents
 
 The deliverable collection contains the following documents:
