@@ -90,6 +90,25 @@ The following algorithms have been selected to find a model that best solves the
 
 To have a homogeneous training and testing data set, about 5000 matches were sampled per competitive tier. This ensures the player skill is equally represented in the samples, and do not influence the results. 1/5 of the data was held out for testing the models at the end; the samples have been stratified to ensure the tier distribution is maintained. No penalty was required to solve any imbalanced data, since there was an almost equal amount of samples for each of the labels analyzed. This contributed to limit data-driven asym- metric costs.
 
+### Measure of Success
+
+To benchmark each model’s performance, a dummy clas-
+sifier was created to provide a baseline to match against
+each of the scores posted. Using a uniform distribution,
+the classifier chooses a winner randomly, akin to flipping
+a coin.
+
+| Measure | Value |
+| --- | ----------- |
+| Accuracy | 50.4 |
+| Precision | 50.4 |
+| Recall | 51.5 |
+
+For us to declare a model as successful, its accuracy
+scores (Accuracy, Precision, Recall) must surpass that of
+the Dummy classifier by 50%; hence surpassing a threshold
+of 75% across the board.
+
 ## Deliverable Contents
 
 The deliverable collection contains the following documents:
