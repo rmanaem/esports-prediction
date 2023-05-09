@@ -20,6 +20,34 @@ Created in 2009 by Riot Games, League of Legends (LoL) is a team-based strategy 
 
 A match of League of Legends requires several skills to achieve success: a player must be skillful in generating income by increasing their Creep Score (CS), taking down enemy champions and turrets, as well as controlling important map resources such as elemental drakes and Baron Nashor. Predicting a winner from a given match can prove to be difficult, as each of these traits can tip a match’s outcome to a team’s favour and how these milestones are accomplished is just as important as completing them.
 
+### Definitions
+
+Our study will focus on analyzing key parameters of a given match and their development on a minute-to-minute basis. Using the Riot API provided by the game publishers, over 40000 matches and 1.3 million frames of games that have occurred in the year of 2021 have been compiled for analysis. A few terms must be introduced to properly understand the conclusions that stem from our evaluations.
+
+#### Match
+
+A match object contains overall statistics of the contest between the two teams, such as game duration, the winning team of the game; it also records statistics for each of its game participants. For the purpose of this study, only the winning team will serve as the output of our results.
+
+#### Objective Firsts
+
+Objectives are key milestones teams can achieve during a match. These can vary from destroying structures to defeating elite monsters or opposing participants. A match object provides to us which team has been able to attain each of these key milestones for the first time in that game:
+
+- Champion: The first player succeeding to defeat another player in a game is awarded bonus gold to the team, giving them an edge at the early stages of the game. This is commonly referred to as ”first blood”.
+- Turret (or Tower): Bonus gold is rewarded for every team member that contributed to the destruction of the first structure.
+- Dragon: When slain, it rewards the team with a buff on all its players for the remainder of the game.
+- Baron Nashor: A team successfully slaying Baron Nashor is rewarded with a buff on all team players active on the map Baron only becomes available after 20 minutes has elapsed in a game, making it a potential advantage to be acquired from the mid to the late stages of the game.
+- Inhibitor: When an inhibitor is destroyed, the opposing team produces stronger minions for a set amount of time, giving them added advantage at the later stages of the game.
+
+#### Frame and Game Resources
+
+A frame f represents the current state of a match at the given minute mark. The cumulated amounts for each team player’s stat line is compiled under a feature specific to that team. This will include several dimensions such as:
+- Creep Score (CS) and gold collected
+- Total damage done to champions
+- Total champion kills by the team
+- Amount of turrets, inhibitors and plates destroyed
+- Amount of Baron Nashors slain
+- Amount of Rift Heralds slain
+
 ---
 
 ## Deliverable Contents
