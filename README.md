@@ -236,3 +236,6 @@ We have used these sources to bring the project to life:
 - [*Riot Developer - Collecting data* (Best practices on the Riot API)](https://riot-api-libraries.readthedocs.io/en/latest/collectingdata.html)
 
 ---
+## License
+
+Esports prediction is licensed under the terms of [MIT License](LICENSE).
