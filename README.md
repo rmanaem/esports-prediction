@@ -86,6 +86,10 @@ The following algorithms have been selected to find a model that best solves the
 - **Logistic Regression**: Simple and effective model to train to solve a binary classification problem.
 - **Support Vector Machine**: Can provide a decision function that separates the data convincingly.
 
+### Methodology
+
+To have a homogeneous training and testing data set, about 5000 matches were sampled per competitive tier. This ensures the player skill is equally represented in the samples, and do not influence the results. 1/5 of the data was held out for testing the models at the end; the samples have been stratified to ensure the tier distribution is maintained. No penalty was required to solve any imbalanced data, since there was an almost equal amount of samples for each of the labels analyzed. This contributed to limit data-driven asym- metric costs.
+
 ## Deliverable Contents
 
 The deliverable collection contains the following documents:
