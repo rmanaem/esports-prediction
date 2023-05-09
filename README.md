@@ -38,6 +38,7 @@ Objectives are key milestones teams can achieve during a match. These can vary f
 - Baron Nashor: A team successfully slaying Baron Nashor is rewarded with a buff on all team players active on the map Baron only becomes available after 20 minutes has elapsed in a game, making it a potential advantage to be acquired from the mid to the late stages of the game.
 - Inhibitor: When an inhibitor is destroyed, the opposing team produces stronger minions for a set amount of time, giving them added advantage at the later stages of the game.
 
+<<<<<<< HEAD
 #### Frame and Game Resources
 
 A frame f represents the current state of a match at the given minute mark. The cumulated amounts for each team player’s stat line is compiled under a feature specific to that team. This will include several dimensions such as:
@@ -47,6 +48,29 @@ A frame f represents the current state of a match at the given minute mark. The 
 - Amount of turrets, inhibitors and plates destroyed
 - Amount of Baron Nashors slain
 - Amount of Rift Heralds slain
+=======
+### Feature Analysis
+
+With the number of features at our disposal, it is worthwhile to explore and analyze how they relate to our expected outcome and their importance to our study. From analyzing five objective first features analyzed, the first inhibitor property came out as the strongest indicator to a winner, with 90% of the matches won by the same team that has destroyed the first inhibitor. This is plausible, as inhibitors are broken late into a game’s match and give an advantageous boost to the team towards reaching a decisive win. The figure below illustrates proportion of matches won according to the team that acquired the first inhibitors.
+
+<p alt="first-inhibitor" align="center"><a href="https://github.com/rmanaem/esports-prediction/blob/master/figures/first-inhibitor.png"><img src="https://github.com/rmanaem/esports-prediction/blob/master/figures/first-inhibitor.png?raw=true"/></a></p>
+
+On the game resources side, A strong correlation was shared between the winning team, the gold advantage and the kill advantage. As gold is the primary indicator of a team’s strength, it follows that it stands as a strong measure to determine which team has the best chance of cracking the opponent’s base.
+
+| Feature | Value |
+| ----------- | ----------- |
+| gold advantage | 0.717 |
+| kill advantage | 0.647 |
+| tower advantage | 0.578 |
+| cs advantage | 0.509 |
+| dragon advantage | 0.507 |
+| baron advantage | 0.417 |
+| inhibitor advantage | 0.414 |
+| plate advantage | 0.375 |
+| rift advantage | 0.247 |
+
+In sum, the data holds clear levers that the model can use for coming up with a decision as to solving the classification problem. The choice of the data points at a particular time frame in every game will be a determining factor for achieving adequate results during evaluation. To solve the training set’s dimensionality problem, a correlation threshold was set to remove any features that lie below a ratio of 0.5; this left us with the following features remained after the reduction: first inhibitor, baron, kill, gold, damage, and tower advantage.
+>>>>>>> 966dcf8 (Added `Feature Analysis` subsection to the `Data Overview` section)
 
 ---
 
