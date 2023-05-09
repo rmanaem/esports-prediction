@@ -2,10 +2,6 @@
 
 # Introduction
 
-## Purpose
-
-This repository holds the code related to the study compiled in the 2021 report *Predictive Analysis in League of Legends e-Sports Matches*, written by the same authors towards the requirements of the COMP 432 Machine Learning class, given to students at Concordia University Montreal's Fall 2021 semester.
-
 ## Deliverable Contents
 
 The deliverable collection contains the following documents:
