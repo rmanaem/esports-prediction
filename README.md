@@ -104,7 +104,40 @@ For us to declare a model as successful, its accuracy scores (Accuracy, Precisio
 
 ### Preprocessing
 
-Prior to training, a preprocessing pipeline was established to clean the data. Labels were set to red and blue-won games, and each of their corresponding features were collapsed against each other in order to record to which team the advantage leans; a negative value represents an advantage to the blue side, and a positive value to the red side. Two variants of the data were produced: The binary model only reports each advantage under two labels, while the difference variant keeps the integer value of that advantage. The latter retains some information regarding the intensity of the advantage a team might have against the other; A team with an advantage of thousands of gold may be decided earlier than a match where only 10 gold separates each team’s economy. Finally, a min-max scaling was perfomed on the data to simplify its visualization when cross-comparing features against each other; a value under 0.5 would lean towards a blue side victory, while values above 0.5 would give reason to the red side.
+Prior to training, a preprocessing pipeline was established to clean the data. Labels were set to red and blue-won games, and each of their corresponding features were collapsed against each other in order to record to which team the advantage leans; a negative value represents an advantage to the blue side, and a positive value to the red side. 
+
+Two variants of the data were produced: The binary model only reports each advantage under two labels, while the difference variant keeps the integer value of that advantage. The latter retains some information regarding the intensity of the advantage a team might have against the other; A team with an advantage of thousands of gold may be decided earlier than a match where only 10 gold separates each team’s economy. 
+
+Finally, a min-max scaling was perfomed on the data to simplify its visualization when cross-comparing features against each other; a value under 0.5 would lean towards a blue side victory, while values above 0.5 would give reason to the red side.
+
+### Training
+
+For each of the models selected, a number of hyperparameters were manipulated in order to find the best estimator for classifying the samples. To find the right set of hyperparameters, a cross-validation search was performed for the various properties held by the models. The lack of a data imbalance also avoids a large misclassification of data points belonging to a small class, which would require us to introduce penalties to a class handicapped by a lack of example. 
+
+Two of the dimensions, kill and gold advantage, were used to plot and visualize the final trained models to provide a heuristic on the strategy each model is expecting to take. 
+
+The figure below illustrates prediction map for kNN model, using two dimensions (kill advantage vs gold advantage)
+
+<p alt="kNN" align="center"><a href="https://github.com/rmanaem/esports-prediction/blob/master/figures/plotting_knn.png"><img src="https://github.com/rmanaem/esports-prediction/blob/master/figures/plotting_knn.png?raw=true"/></a></p>
+
+|  | Dummy | kNN | Random Forest | AdaBoost | Logistic Regression | SVM | Neural Network |
+| --- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| Accuracy | 50.4 | 90.35 | 90.48 | 90.12 | 90.28 | 90.40 | 90.22 |
+| Precision | 50.4 | 89.61 | 89.71 | 89.40 | 89.87 | 89.70 | 89.35 |
+| Recall | 51.5 | 91.26 | 91.41 | 91.00 | 90.75 | 91.26 | 91.31 |
+| F1 Score | 50.94 | 90.43 | 90.55 | 90.31 | 90.36 | 90.48 | 90.32 |
+
+The support vector machine took the longest to train. As
+for random forest, it had the best fit against the training data.
+
+<p alt="rf-confusion-matrix" align="center"><a href="https://github.com/rmanaem/esports-prediction/blob/master/figures/rf_confusion_matrix.png"><img src="https://github.com/rmanaem/esports-prediction/blob/master/figures/rf_confusion_matrix.png?raw=true"/></a></p>
+
+The figure above illustrates the Random Forest’s confusion matrix against the training set.
+
+Results posted by the neural network algorithm were not convincing enough to analyze the features provided. Across a total of 144 fits, the model capped at its local minima of
+0.38. If added dimensions can provide more information to the model, it may be possible to train a model that can minimize the loss value against the dataset provided.
+
+---
 
 ## Deliverable Contents
 
