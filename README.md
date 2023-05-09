@@ -92,11 +92,7 @@ To have a homogeneous training and testing data set, about 5000 matches were sam
 
 ### Measure of Success
 
-To benchmark each model’s performance, a dummy clas-
-sifier was created to provide a baseline to match against
-each of the scores posted. Using a uniform distribution,
-the classifier chooses a winner randomly, akin to flipping
-a coin.
+To benchmark each model’s performance, a dummy classifier was created to provide a baseline to match against each of the scores posted. Using a uniform distribution, the classifier chooses a winner randomly, akin to flipping a coin.
 
 | Measure | Value |
 | --- | ----------- |
@@ -104,10 +100,11 @@ a coin.
 | Precision | 50.4 |
 | Recall | 51.5 |
 
-For us to declare a model as successful, its accuracy
-scores (Accuracy, Precision, Recall) must surpass that of
-the Dummy classifier by 50%; hence surpassing a threshold
-of 75% across the board.
+For us to declare a model as successful, its accuracy scores (Accuracy, Precision, Recall) must surpass that of the Dummy classifier by 50%; hence surpassing a threshold of 75% across the board.
+
+### Preprocessing
+
+Prior to training, a preprocessing pipeline was established to clean the data. Labels were set to red and blue-won games, and each of their corresponding features were collapsed against each other in order to record to which team the advantage leans; a negative value represents an advantage to the blue side, and a positive value to the red side. Two variants of the data were produced: The binary model only reports each advantage under two labels, while the difference variant keeps the integer value of that advantage. The latter retains some information regarding the intensity of the advantage a team might have against the other; A team with an advantage of thousands of gold may be decided earlier than a match where only 10 gold separates each team’s economy. Finally, a min-max scaling was perfomed on the data to simplify its visualization when cross-comparing features against each other; a value under 0.5 would lean towards a blue side victory, while values above 0.5 would give reason to the red side.
 
 ## Deliverable Contents
 
