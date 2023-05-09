@@ -1,6 +1,10 @@
 # Esports Prediction
 
-# Introduction
+## Abstract
+
+League of Legends is a team-based strategy game requiring several skills to achieve victories. Predicting a winner from a given match can prove to be difficult, as several traits hold a level of importance to determining the victor. The study analyzes key parameters of a given match, such as overall statistics, objective first and game resources at a given time. From a set point in time, classification models (support vector machine, random forest and k-nearest neighbours to name a few) were trained against the most important features assessed using their correlation values. The prediction of a victor can be maximized to the point it surpasses a uniform random distribution; relying on parameters such that weights are properly distributed can further improve the model’s results.
+
+---
 
 ## Deliverable Contents
 
