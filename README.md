@@ -164,6 +164,14 @@ The table below shows samples misclassified as blue victories (random forest est
 
 When verifying the misclassified samples, we can identify the bias the model had in response to the first team holding the inhibitor. This can lead to a loss of precision by the model, which can be observed by the smaller precision scores posted by all models. While first objectives are good indicators to a team’s capacity to win, it may be important to weight them such that it does not affect precision scores negatively, as shown above.
 
+### Improvements
+
+Our models limited themselves to analyzing a single frame. It is possible, however, to feed the model with a time series, and have it predict the full outcome of the game on a minute-to-minute basis. It may be required to pre-process a uniform data set with an equal amount of frames for each sample. Feeding the data to a Neural Network can seek at finding patterns related to the flow of an ongoing game.
+
+To conclude, other data sources prove helpful to learn additional features. Leaguepedia API, an open-source wiki, keeps a record of every LoL player statistics in a season, which can be factored in to approximate the strength of each player participating in a match. The champion’s strength can also be a relevant indicator to configure using the Lolesports API, another Riot hosted data source saving the order of items purchased by the user.
+
+---
+
 ## Deliverable Contents
 
 The deliverable collection contains the following documents:
