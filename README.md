@@ -1,11 +1,5 @@
 # Esports Prediction
 
-# Authors
-
-- Benjamin Lofo Follo
-- Arman Jahanpour
-- Jialin Yang
-
 # Introduction
 
 ## Purpose
